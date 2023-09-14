@@ -1,36 +1,28 @@
 const mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   bcrypt = require('bcrypt');
-const { isEmail } = require('validator');
-
-const Email = new Schema({
-  address: {
-    type: String,
-    lowercase: true,
-    required: [true, "can't be blank"],
-    match: [/\S+@\S+\.\S+/, 'is invalid'],
-    index: true,
-    validate: [isEmail, 'Please enter a valid email address'],
-  },
-  verified: { type: Boolean, default: false },
-});
 
 const UserSchema = new Schema(
   {
     username: {
       type: String,
-      lowercase: true,
-      required: [true, "can't be blank"],
-      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+      required: true,
       index: true,
+      minLength: 6,
+      maxLength: 25,
     },
     // password is hashed with bcrypt
     password: {
       type: String,
       required: true,
-      minlength: [6, 'Minimum password length must be 6 characters'],
+      minLength: 6,
     },
-    email: { type: Email, required: true },
+    email: {
+      type: String,
+      required: true,
+      email: true,
+    },
+    roles: [String],
     profile: {
       firstName: String,
       lastName: String,
@@ -46,6 +38,13 @@ const UserSchema = new Schema(
       },
     },
     active: { type: Boolean, default: true },
+    verified: { type: Boolean, default: false },
+    google: {
+      id: String,
+      token: String,
+      email: String,
+      name: String,
+    },
   },
   { timestamps: true }
 );
@@ -59,8 +58,8 @@ UserSchema.pre('save', function (next) {
   next();
 });
 
-UserSchema.methods.comparePassword = function (plaintext, callback) {
-  return callback(null, bcrypt.compareSync(plaintext, this.password));
+UserSchema.methods.comparePassword = function (plaintext) {
+  return bcrypt.compareSync(plaintext, this.password);
 };
 
 module.exports = mongoose.model('User', UserSchema);

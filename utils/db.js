@@ -1,3 +1,5 @@
+// This utility is for testing purposes only.
+
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 

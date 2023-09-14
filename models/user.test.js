@@ -5,7 +5,7 @@ const db = require('../utils/db');
 const userData = {
   username: 'GipsyDanger',
   password: 'Secret11223',
-  email: { address: 'niceemail1122@gmail.com' },
+  email: 'niceemail1122@gmail.com',
   profile: {
     firstName: 'Gipsy',
     lastName: 'Danger',
@@ -43,7 +43,7 @@ describe('User model', () => {
     const savedUser = await validUser.save();
     // Object Id should be automatically defined when successfully saved to MongoDB.
     expect(savedUser._id).toBeDefined();
-    expect(savedUser.email.address).toBe(userData.email.address);
+    expect(savedUser.email).toBe(userData.email);
   });
 
   //Shouldn't be able to add in any field that isn't defined in the schema
