@@ -1,13 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { NextUIProvider } from '@nextui-org/react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+import '@fontsource-variable/open-sans';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import store from './redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+        <NextUIProvider>
+          <App />
+        </NextUIProvider>
+      </GoogleOAuthProvider>
+    </Provider>
   </React.StrictMode>
 );
 
