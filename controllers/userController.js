@@ -72,7 +72,7 @@ exports.googleLogin = async (req, res) => {
 
       res.status(201).send({
         message: 'Logged in Successfully',
-        username: existingUser.username,
+        userId: existingUser._id,
         accessToken: token,
       });
     })
@@ -119,7 +119,7 @@ exports.register = async (request, response) => {
 
         response.status(201).send({
           message: 'User Created Successfully',
-          username: result.username,
+          userId: result._id,
           accessToken: token,
         });
       })
@@ -151,7 +151,7 @@ exports.login = async (request, response) => {
 
       response.status(200).send({
         message: 'Logged in Successfully',
-        username: findUser.username,
+        userId: findUser._id,
         accessToken: token,
       });
     } else {
@@ -161,5 +161,16 @@ exports.login = async (request, response) => {
     response
       .status(422)
       .json({ error: { username: 'Username is not registered.' } });
+  }
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(400).json({ message: 'User not found' });
+    const { password, ...others } = user._doc;
+    return res.status(200).json(others);
+  } catch (err) {
+    return res.status(500).json({ error: { message: err.message } });
   }
 };

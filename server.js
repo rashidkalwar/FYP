@@ -3,7 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');
+
 const userRoutes = require('./routes/userRoutes');
+const datasetRoutes = require('./routes/datasetRoutes');
 const connectDB = require('./config/db');
 const config = require('./config/keys');
 
@@ -14,12 +17,20 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
 
-app.use('/api/user', userRoutes);
+// static folder
+app.use(express.static(path.join(__dirname, 'public/assets')));
 
+// routes
+app.use('/api/user', userRoutes);
+app.use('/api/dataset', datasetRoutes);
+
+// mongoose database setup
 connectDB();
 
 app.get('/', (req, res) => res.send('Back-end REST API is Working!'));
