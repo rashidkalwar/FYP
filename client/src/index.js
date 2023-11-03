@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { NextUIProvider } from '@nextui-org/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -15,9 +16,11 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-        <NextUIProvider>
-          <App />
-        </NextUIProvider>
+        <BrowserRouter>
+          <NextUIProvider>
+            <App />
+          </NextUIProvider>
+        </BrowserRouter>
       </GoogleOAuthProvider>
     </Provider>
   </React.StrictMode>
