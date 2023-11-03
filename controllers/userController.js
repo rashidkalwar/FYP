@@ -70,10 +70,13 @@ exports.googleLogin = async (req, res) => {
         userName: existingUser.username,
       });
 
+      delete existingUser._doc.password;
+
       res.status(201).send({
         message: 'Logged in Successfully',
         userId: existingUser._id,
         accessToken: token,
+        ...existingUser._doc,
       });
     })
     .catch((err) => {
@@ -117,11 +120,15 @@ exports.register = async (request, response) => {
           userName: result.username,
         });
 
-        response.status(201).send({
-          message: 'User Created Successfully',
+        delete result._doc.password;
+
+        const payload = {
+          ...result._doc,
+          message: 'User created Successfully',
           userId: result._id,
           accessToken: token,
-        });
+        };
+        response.status(201).send(payload);
       })
       .catch((err) => {
         response.status(500).send({
@@ -149,11 +156,14 @@ exports.login = async (request, response) => {
         userName: findUser.username,
       });
 
-      response.status(200).send({
+      delete findUser._doc.password;
+      const payload = {
+        ...findUser._doc,
         message: 'Logged in Successfully',
         userId: findUser._id,
         accessToken: token,
-      });
+      };
+      response.status(201).send(payload);
     } else {
       response.status(422).json({ error: { password: 'Incorrect password.' } });
     }

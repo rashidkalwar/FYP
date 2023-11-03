@@ -45,7 +45,7 @@ function ExtractData(fileExtension, filePath) {
   } else if (fileExtension === '.json') {
     data = fs.readFileSync(filePath, { encoding: 'utf8' });
   } else {
-    return res.status(400).send({ message: 'file format not supported!' });
+    return res.status(422).send({ message: 'file format not supported!' });
   }
 
   fs.unlinkSync(filePath);
@@ -57,7 +57,7 @@ function ExtractData(fileExtension, filePath) {
 exports.upload = async (req, res) => {
   uploadSingleFile(req, res, async (err) => {
     if (err) {
-      return res.status(400).send({ message: err.message });
+      return res.status(422).json({ error: { message: err.message } });
     }
 
     // console.log(req.body);
@@ -66,9 +66,11 @@ exports.upload = async (req, res) => {
     const title = req.body ? req.body.title : null;
 
     if (!title) {
-      return res.status(400).send({ message: 'Title is required' });
+      return res.status(422).json({ error: { message: 'Title is required' } });
     } else if (!fileData) {
-      return res.status(400).send({ message: 'You must select a file.' });
+      return res
+        .status(422)
+        .json({ error: { message: 'You must select a file.' } });
     } else {
       const filePath = req.file.path;
       const ext = path.extname(req.file.originalname);
@@ -105,9 +107,9 @@ exports.upload = async (req, res) => {
             });
           });
       } else {
-        return res
-          .status(400)
-          .send({ message: 'Dataset with this title already exists' });
+        return res.status(422).json({
+          error: { message: 'Dataset with this title already exists' },
+        });
       }
     }
   });
@@ -130,7 +132,7 @@ exports.getMany = async (req, res) => {
   const userId = req.user.userId;
   try {
     const datasets = await Dataset.find({ user: userId }).select(
-      '_id title description'
+      '_id title description slug createdAt updatedAt'
     );
     return res.status(200).json(datasets);
   } catch (err) {
