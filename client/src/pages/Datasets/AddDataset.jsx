@@ -11,6 +11,7 @@ import {
   Button,
   useDisclosure,
   Input,
+  Textarea,
 } from '@nextui-org/react';
 import { Plus } from 'lucide-react';
 
@@ -21,6 +22,7 @@ function AddDataset() {
 
   const [file, setFile] = React.useState();
   const [title, setTitle] = React.useState('');
+  const [description, setDescription] = React.useState('');
 
   const dispatch = useDispatch();
 
@@ -29,6 +31,7 @@ function AddDataset() {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('title', title);
+    formData.append('description', description);
 
     dispatch(addDataset({ formData }));
 
@@ -57,7 +60,9 @@ function AddDataset() {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Add a new Dataset
+              </ModalHeader>
               <ModalBody>
                 <form onSubmit={handleSubmit}>
                   <Input
@@ -70,6 +75,16 @@ function AddDataset() {
                     type="text"
                     onChange={(e) => {
                       setTitle(e.target.value);
+                    }}
+                  />
+
+                  <Textarea
+                    label="Description"
+                    placeholder="Description of the dataset"
+                    variant="bordered"
+                    labelPlacement="outside"
+                    onChange={(e) => {
+                      setDescription(e.target.value);
                     }}
                   />
 
@@ -87,7 +102,7 @@ function AddDataset() {
                   />
                   <div className="flex justify-center items-center">
                     <Button
-                      className=""
+                      className="bg-blue-900/90 hover:bg-blue-900/80"
                       color="primary"
                       type="submit"
                       onPress={onClose}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Table,
   TableHeader,
@@ -8,6 +9,8 @@ import {
   TableCell,
   Input,
   Button,
+  Tooltip,
+  Spinner,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
@@ -16,13 +19,32 @@ import {
   Pagination,
 } from '@nextui-org/react';
 import {
-  MoreVertical as VerticalDotsIcon,
   Search as SearchIcon,
+  Eye as EyeIcon,
+  Trash2 as DeleteIcon,
+  Pencil as EditIcon,
 } from 'lucide-react';
-import { columns, datasets } from './data';
+import { fetchDatasets } from '../../redux/dataset/datasetSlice';
 import AddDataset from './AddDataset';
 
-export default function App() {
+const columns = [
+  { name: 'TITLE', uid: 'title', sortable: true },
+  { name: 'DESCRIPTION', uid: 'description' },
+  { name: 'DATE CREATED', uid: 'createdAt', sortable: true },
+  { name: 'DATE UPDATED', uid: 'updatedAt', sortable: true },
+  { name: 'ACTIONS', uid: 'actions' },
+];
+
+export default function Datasets() {
+  const dispatch = useDispatch();
+  const { error, loading, message, datasets } = useSelector(
+    (state) => state.dataset
+  );
+
+  React.useEffect(() => {
+    dispatch(fetchDatasets());
+  }, []);
+
   const [filterValue, setFilterValue] = React.useState('');
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
@@ -65,24 +87,35 @@ export default function App() {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback((dataset, columnKey) => {
+    const slug = dataset['slug'];
     const cellValue = dataset[columnKey];
 
     switch (columnKey) {
+      case 'title':
+        return <div className="font-medium">{cellValue}</div>;
+      case 'createdAt':
+        return <>{cellValue.split('T')[0]}</>;
+      case 'updatedAt':
+        return <>{cellValue.split('T')[0]}</>;
       case 'actions':
         return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <div className="relative flex items-center gap-3">
+            <Tooltip content="View">
+              <span className="- text-blue-900/90 cursor-pointer active:opacity-50">
+                <EyeIcon size={20} />
+              </span>
+            </Tooltip>
+            <Tooltip content="Edit Dataset">
+              <span className="text-default-500 cursor-pointer active:opacity-50">
+                <EditIcon size={18} />
+              </span>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete Dataset">
+              <span className="text-danger cursor-pointer active:opacity-50">
+                <DeleteIcon size={18} />
+                {/* {slug} */}
+              </span>
+            </Tooltip>
           </div>
         );
       default:
@@ -128,7 +161,7 @@ export default function App() {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder="Search by title..."
             startContent={<SearchIcon className="text-gray-500" size={20} />}
             value={filterValue}
             onClear={() => onClear()}
@@ -200,40 +233,50 @@ export default function App() {
   }, [items.length, page, pages, hasSearchFilter]);
 
   return (
-    <Table
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      className="p-2 sm:p-10"
-      classNames={{
-        wrapper: 'max-h-[390px] max-w-[400px] sm:max-w-full',
-      }}
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === 'actions' ? 'center' : 'start'}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={'No datasets found'} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item._id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <>
+      <h2 className="text-3xl font-bold text-blue-900/90 ml-10">Datasets</h2>
+      <Table
+        aria-label="Example table with custom cells, pagination and sorting"
+        isHeaderSticky
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        className="p-2 sm:p-10"
+        classNames={{
+          wrapper: 'max-h-[390px] max-w-[400px] sm:max-w-full',
+        }}
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.uid} allowsSorting={column.sortable}>
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          isLoading={loading}
+          loadingContent={
+            <Spinner
+              label="Loading..."
+              color="default"
+              labelColor="foreground"
+            />
+          }
+          emptyContent={!loading ? 'No datasets found' : ''}
+          items={sortedItems}
+        >
+          {(item) => (
+            <TableRow key={item._id}>
+              {(columnKey) => (
+                <TableCell height={40}>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 }

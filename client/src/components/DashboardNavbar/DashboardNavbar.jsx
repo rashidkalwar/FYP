@@ -91,7 +91,7 @@ function DashboardNavbar() {
             className="flex items-center md:p-4 mx-auto md:mx-0 py-3 md:mb-12"
             to="/"
           >
-            <span className="bg-blue-500 h-10 w-10 text-4xl font-bold flex justify-center items-center md:mr-2 rounded-full">
+            <span className="bg-white text-blue-900/90 font-serif h-10 w-10 text-4xl font-bold flex justify-center items-center md:mr-2 rounded-full">
               G
             </span>
             <p className="text-xl font-bold text-inherit hidden md:flex">

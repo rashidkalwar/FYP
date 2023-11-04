@@ -32,13 +32,13 @@ function UserAvatar() {
           <Avatar
             isBordered
             as="button"
-            className="transition-transform bg-white text-blue-900"
+            className="transition-transform bg-white text-blue-900/90 ring-blue-900/90"
             color="primary"
             fallback={
               <Avatar
                 color="primary"
                 src="/user-icon.png"
-                className="transition-transform bg-white text-blue-900"
+                className="transition-transform bg-white text-blue-900/90 ring-blue-900/90"
                 size="sm"
               />
             }
