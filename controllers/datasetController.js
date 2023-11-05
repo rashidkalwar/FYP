@@ -158,7 +158,9 @@ exports.delete = async (req, res) => {
       return res.status(500).json({ error: { message: err.message } });
     }
   } else {
-    return res.status(400).json({ message: 'Dataset does not exist' });
+    return res
+      .status(400)
+      .json({ error: { message: 'Dataset does not exist' } });
   }
 };
 

@@ -79,6 +79,7 @@ function AddDataset() {
                   />
 
                   <Textarea
+                    className="my-2"
                     label="Description"
                     placeholder="Description of the dataset"
                     variant="bordered"

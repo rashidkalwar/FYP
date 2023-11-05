@@ -9,23 +9,13 @@ import {
   TableCell,
   Input,
   Button,
-  Tooltip,
   Spinner,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  // Chip,
   Pagination,
 } from '@nextui-org/react';
-import {
-  Search as SearchIcon,
-  Eye as EyeIcon,
-  Trash2 as DeleteIcon,
-  Pencil as EditIcon,
-} from 'lucide-react';
+import { Search as SearchIcon } from 'lucide-react';
 import { fetchDatasets } from '../../redux/dataset/datasetSlice';
 import AddDataset from './AddDataset';
+import RowActions from './RowActions';
 
 const columns = [
   { name: 'TITLE', uid: 'title', sortable: true },
@@ -37,9 +27,7 @@ const columns = [
 
 export default function Datasets() {
   const dispatch = useDispatch();
-  const { error, loading, message, datasets } = useSelector(
-    (state) => state.dataset
-  );
+  const { loading, datasets } = useSelector((state) => state.dataset);
 
   React.useEffect(() => {
     dispatch(fetchDatasets());
@@ -49,7 +37,7 @@ export default function Datasets() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
     column: 'createdAt',
-    direction: 'ascending',
+    direction: 'descending',
   });
   const [page, setPage] = React.useState(1);
 
@@ -98,26 +86,7 @@ export default function Datasets() {
       case 'updatedAt':
         return <>{cellValue.split('T')[0]}</>;
       case 'actions':
-        return (
-          <div className="relative flex items-center gap-3">
-            <Tooltip content="View">
-              <span className="- text-blue-900/90 cursor-pointer active:opacity-50">
-                <EyeIcon size={20} />
-              </span>
-            </Tooltip>
-            <Tooltip content="Edit Dataset">
-              <span className="text-default-500 cursor-pointer active:opacity-50">
-                <EditIcon size={18} />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete Dataset">
-              <span className="text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon size={18} />
-                {/* {slug} */}
-              </span>
-            </Tooltip>
-          </div>
-        );
+        return <RowActions slug={slug} />;
       default:
         return cellValue;
     }
