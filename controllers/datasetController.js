@@ -43,7 +43,7 @@ function ExtractData(fileExtension, filePath) {
       data.shift();
     });
   } else if (fileExtension === '.json') {
-    data = fs.readFileSync(filePath, { encoding: 'utf8' });
+    data = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
   } else {
     return res.status(422).send({ message: 'file format not supported!' });
   }
@@ -152,7 +152,7 @@ exports.delete = async (req, res) => {
 
   if (existingDataset) {
     try {
-      const dataset = await Dataset.deleteOne({ user: userId, slug: slug });
+      await Dataset.deleteOne({ user: userId, slug: slug });
       return res.status(200).json({ message: 'Dataset deleted successfully' });
     } catch (err) {
       return res.status(500).json({ error: { message: err.message } });
@@ -168,7 +168,7 @@ exports.delete = async (req, res) => {
 exports.update = async (req, res) => {
   uploadSingleFile(req, res, async (err) => {
     if (err) {
-      return res.status(400).send({ message: err.message });
+      return res.status(400).send({ error: { message: err.message } });
     }
 
     const fileData = req.file;
@@ -177,9 +177,11 @@ exports.update = async (req, res) => {
     const slug = req.params.slug;
 
     if (!title) {
-      return res.status(400).send({ message: 'Title is required' });
+      return res.status(400).send({ error: { message: 'Title is required' } });
     } else if (!fileData) {
-      return res.status(400).send({ message: 'You must select a file.' });
+      return res
+        .status(400)
+        .send({ error: { message: 'You must select a file.' } });
     } else {
       const filePath = req.file.path;
       const ext = path.extname(req.file.originalname);
@@ -213,7 +215,9 @@ exports.update = async (req, res) => {
             });
           });
       } else {
-        return res.status(400).send({ message: 'Dataset not found!' });
+        return res
+          .status(400)
+          .send({ error: { message: 'Dataset not found!' } });
       }
     }
   });
