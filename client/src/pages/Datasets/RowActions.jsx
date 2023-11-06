@@ -11,6 +11,8 @@ import {
   Button,
   useDisclosure,
   Spinner,
+  Input,
+  Textarea,
 } from '@nextui-org/react';
 import {
   Eye as EyeIcon,
@@ -18,7 +20,11 @@ import {
   Pencil as EditIcon,
   AlertCircle as AlertIcon,
 } from 'lucide-react';
-import { deleteDataset, fetchDataset } from '../../redux/dataset/datasetSlice';
+import {
+  deleteDataset,
+  fetchDataset,
+  updateDataset,
+} from '../../redux/dataset/datasetSlice';
 import DatasetsTable from './DatasetTable';
 
 function View({ slug }) {
@@ -80,7 +86,94 @@ function View({ slug }) {
   );
 }
 
-function Edit() {
+const EditModelContent = (props) => {
+  const { slug, onClose, dataset } = props;
+
+  const [file, setFile] = React.useState();
+  const [title, setTitle] = React.useState(dataset.title);
+  const [description, setDescription] = React.useState(dataset.description);
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', title);
+    formData.append('description', description);
+
+    dispatch(updateDataset({ slug, formData }));
+  };
+
+  return (
+    <>
+      <ModalHeader className="flex flex-col gap-1">Update Dataset</ModalHeader>
+      <ModalBody>
+        <form onSubmit={handleSubmit}>
+          <Input
+            autoFocus
+            required={true}
+            label="Title"
+            placeholder="Title for the Dataset"
+            variant="bordered"
+            labelPlacement="outside"
+            type="text"
+            defaultValue={dataset.title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+
+          <Textarea
+            className="my-2"
+            label="Description"
+            placeholder="Description of the dataset"
+            variant="bordered"
+            labelPlacement="outside"
+            defaultValue={dataset.description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          />
+
+          <Input
+            required={true}
+            className="my-4"
+            label="Data set"
+            placeholder="Select file with Data"
+            type="file"
+            variant="bordered"
+            labelPlacement="outside"
+            onChange={(e) => {
+              setFile(e.target.files[0]);
+            }}
+          />
+          <div className="flex justify-center items-center">
+            <Button
+              className="bg-blue-900/90 hover:bg-blue-900/80"
+              color="primary"
+              type="submit"
+              onPress={onClose}
+            >
+              Save
+            </Button>
+          </div>
+        </form>
+      </ModalBody>
+    </>
+  );
+};
+
+function Edit({ slug }) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { loading, dataset } = useSelector((state) => state.dataset);
+
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(fetchDataset(slug));
+  };
+
   return (
     <>
       <Tooltip content="Edit Dataset">
@@ -90,10 +183,31 @@ function Edit() {
           variant="light"
           disableRipple
           size="sm"
+          onPress={onOpen}
+          onClick={handleClick}
         >
           <EditIcon size={18} />
         </Button>
       </Tooltip>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              {loading ? (
+                <ModalBody className="min-h-[200px] flex justify-center items-center">
+                  <Spinner size="lg" color="default" />
+                </ModalBody>
+              ) : (
+                <EditModelContent
+                  slug={slug}
+                  onClose={onClose}
+                  dataset={dataset}
+                />
+              )}
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }
@@ -160,12 +274,11 @@ function Delete(props) {
   );
 }
 
-function RowActions(props) {
-  const { slug } = props;
+function RowActions({ slug }) {
   return (
     <div className="flex justify-center items-center">
       <View slug={slug} />
-      <Edit />
+      <Edit slug={slug} />
       <Delete slug={slug} />
     </div>
   );

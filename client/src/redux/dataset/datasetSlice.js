@@ -29,10 +29,24 @@ export const fetchDataset = createAsyncThunk(
 
 // Add a new Dataset
 export const addDataset = createAsyncThunk(
-  'dataset/add_datasets',
+  'dataset/add_dataset',
   async ({ formData }, { rejectWithValue, dispatch }) => {
     try {
       const response = await service.addDataset(formData);
+      dispatch(fetchDatasets());
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Update a dataset
+export const updateDataset = createAsyncThunk(
+  'dataset/update_dataset',
+  async ({ slug, formData }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await service.updateDataset(slug, formData);
       dispatch(fetchDatasets());
       return response.data;
     } catch (error) {
@@ -118,6 +132,24 @@ const datasetSlice = createSlice({
         state.error = null;
       })
       .addCase(addDataset.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload
+          ? action.payload.error
+          : { message: 'Network Error!' };
+      })
+
+      // Update a Dataset
+      .addCase(updateDataset.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(updateDataset.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(updateDataset.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload
           ? action.payload.error

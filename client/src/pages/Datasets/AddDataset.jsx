@@ -109,7 +109,7 @@ function AddDataset() {
                       onPress={onClose}
                       isLoading={loading}
                     >
-                      {loading ? 'Loading...' : 'Submit'}
+                      {loading ? 'Loading...' : 'Save'}
                     </Button>
                   </div>
                 </form>
