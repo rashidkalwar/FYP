@@ -1,12 +1,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as service from './datasetService';
 
-// Add a new Dataset
+// Fetch all Datasets for current user
 export const fetchDatasets = createAsyncThunk(
   'dataset/get_datasets',
   async (_, { rejectWithValue }) => {
     try {
       const response = await service.getDatasets();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Fetch a Dataset
+export const fetchDataset = createAsyncThunk(
+  'dataset/get_dataset',
+  async (slug, { rejectWithValue }) => {
+    try {
+      const response = await service.getDataset(slug);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -28,17 +41,15 @@ export const addDataset = createAsyncThunk(
   }
 );
 
-// Add a new Dataset
+// Delete a Dataset
 export const deleteDataset = createAsyncThunk(
   'dataset/delete_dataset',
   async (slug, { rejectWithValue, dispatch }) => {
     try {
       const response = await service.deleteDataset(slug);
-      console.log(response);
       dispatch(fetchDatasets());
       return response.data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -77,7 +88,21 @@ const datasetSlice = createSlice({
       })
       .addCase(fetchDatasets.rejected, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+        state.error = action.payload.message;
+      })
+
+      // Fetch a Dataset
+      .addCase(fetchDataset.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(fetchDataset.fulfilled, (state, action) => {
+        state.dataset = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchDataset.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload.message;
       })
 

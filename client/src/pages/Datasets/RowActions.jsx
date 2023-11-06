@@ -10,6 +10,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  Spinner,
 } from '@nextui-org/react';
 import {
   Eye as EyeIcon,
@@ -17,9 +18,19 @@ import {
   Pencil as EditIcon,
   AlertCircle as AlertIcon,
 } from 'lucide-react';
-import { deleteDataset } from '../../redux/dataset/datasetSlice';
+import { deleteDataset, fetchDataset } from '../../redux/dataset/datasetSlice';
+import DatasetsTable from './DatasetTable';
 
-function View() {
+function View({ slug }) {
+  const { loading, dataset } = useSelector((state) => state.dataset);
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(fetchDataset(slug));
+  };
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <>
       <Tooltip content="View Dataset">
@@ -28,10 +39,43 @@ function View() {
           isIconOnly
           disableRipple
           size="sm"
+          onPress={onOpen}
+          onClick={handleClick}
         >
           <EyeIcon size={18} />
         </Button>
       </Tooltip>
+
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl h-full max-h-[550px]"
+      >
+        <ModalContent>
+          {loading ? (
+            <ModalBody className="min-h-[550px] flex justify-center items-center">
+              <Spinner size="lg" color="default" />
+            </ModalBody>
+          ) : (
+            <>
+              <ModalHeader className="flex justify-center items-center gap-1">
+                Dataset details
+              </ModalHeader>
+              <ModalBody>
+                <div className="flex items-center">
+                  <div className="font-semibold">Title:</div>
+                  <p className="ml-2">{dataset && dataset.title}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="font-semibold">Description:</div>
+                  <p className="ml-2">{dataset && dataset.description}</p>
+                </div>
+                <DatasetsTable data={dataset.data} />
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }
@@ -78,7 +122,6 @@ function Delete(props) {
           size="sm"
         >
           <DeleteIcon size={18} />
-          {/* {slug} */}
         </Button>
       </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -103,7 +146,6 @@ function Delete(props) {
                 <Button
                   color="primary"
                   className="bg-blue-900/90 hover:bg-blue-900/80"
-                  //   onPress={onClose}
                   isLoading={loading}
                   onClick={handleClick}
                 >
@@ -119,12 +161,13 @@ function Delete(props) {
 }
 
 function RowActions(props) {
+  const { slug } = props;
   return (
-    <>
-      <View />
+    <div className="flex justify-center items-center">
+      <View slug={slug} />
       <Edit />
-      <Delete slug={props.slug} />
-    </>
+      <Delete slug={slug} />
+    </div>
   );
 }
 
