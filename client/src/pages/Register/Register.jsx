@@ -130,7 +130,7 @@ function Register() {
           </Checkbox>
           <Button
             radius="full"
-            className="bg-gray-800 hover:bg-gray-700 text-white font-semibold w-full my-5 "
+            className="bg-blue-900/90 hover:bg-blue-900/80 text-white font-semibold w-full my-5 "
             disableRipple
             variant="shadow"
             type="submit"
@@ -140,7 +140,7 @@ function Register() {
           </Button>
           <p className="text-sm font-medium text-gray-700">
             Already have an account?{' '}
-            <Link className="text-teal-600" to="/login">
+            <Link className="text-blue-700" to="/login">
               Log in
             </Link>
           </p>
