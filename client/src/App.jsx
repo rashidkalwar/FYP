@@ -8,6 +8,10 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Datasets from './pages/Datasets/Datasets';
 import Visualizations from './pages/Visualizations/Visualizations';
 import Analytics from './pages/Analytics/Analytics';
+import CreateVisualization from './pages/Visualizations/Create/CreateVisualization';
+import StepOne from './pages/Visualizations/Create/StepOne';
+import StepTwo from './pages/Visualizations/Create/StepTwo';
+import StepThree from './pages/Visualizations/Create/StepThree';
 
 import HomeNavbar from './components/HomeNavbar/HomeNavbar';
 import DashboardNavbar from './components/DashboardNavbar/DashboardNavbar';
@@ -20,19 +24,28 @@ function App() {
     <>
       <Toaster position="top-center" />
       <Routes>
+        {/* Unprotected routes */}
         <Route element={<HomeNavbar />}>
           <Route path="/" element={<Home />} />
         </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
+        {/* Protected routes */}
         <Route path="/dashboard" element={<DashboardNavbar />}>
           <Route index element={<Dashboard />} />
           <Route path="datasets" element={<Datasets />} />
-          <Route path="visualizations" element={<Visualizations />} />
+          <Route path="visualizations">
+            <Route index element={<Visualizations />} />
+            <Route path="create" element={<CreateVisualization />}>
+              <Route path="" element={<StepOne />} />
+              <Route path="step-1" element={<StepOne />} />
+              <Route path="step-2" element={<StepTwo />} />
+              <Route path="step-3" element={<StepThree />} />
+            </Route>
+          </Route>
           <Route path="analytics" element={<Analytics />} />
         </Route>
-
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );
