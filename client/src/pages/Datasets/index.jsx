@@ -172,6 +172,7 @@ export default function Datasets() {
           showControls
           showShadow
           color="primary"
+          radius="full"
           classNames={{
             cursor: 'bg-blue-900/90 shadow-blue-900 shadow-sm',
           }}

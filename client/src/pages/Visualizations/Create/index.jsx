@@ -31,7 +31,7 @@ function CreateVisualization() {
           </div>
         }
       >
-        <StepOne />
+        <StepOne setSelected={setSelected} />
       </Tab>
       <Tab
         key="step-2"

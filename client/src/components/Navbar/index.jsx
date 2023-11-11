@@ -126,6 +126,7 @@ export default function Navbar() {
                   to="/register"
                   variant="shadow"
                   className="bg-blue-900/90 hover:bg-blue-900/80 shadow-blue-900/40 shadow-md"
+                  radius="full"
                 >
                   Sign Up
                 </Button>

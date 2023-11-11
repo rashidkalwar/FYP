@@ -31,6 +31,7 @@ function Visualizations() {
           as={Link}
           to="create"
           endContent={<Plus />}
+          radius="full"
         >
           Create
         </Button>

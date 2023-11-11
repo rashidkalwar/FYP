@@ -52,6 +52,7 @@ function AddDataset() {
         onPress={onOpen}
         endContent={<Plus />}
         color="primary"
+        radius="full"
         disableRipple
       >
         Add New
