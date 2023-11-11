@@ -6,6 +6,29 @@ exports.getOne = async (req, res) => {
 
 exports.create = async (req, res) => {
   const userId = req.user.userId;
+  const datasetId = req.body.datasetId;
+  const name = req.body.name;
+  const description = req.body.description;
+
+  const visualization = new Visualization({
+    userId: userId,
+    datasetId: datasetId,
+    name: name,
+    description: description,
+  });
+
+  await visualization
+    .save()
+    .then(() => {})
+    .catch((err) =>
+      res.status(500).send({
+        ...err,
+        error: {
+          message: 'Error creating Visualization',
+        },
+      })
+    );
+
   return res.status(200).json({ message: 'Create method working' });
 };
 

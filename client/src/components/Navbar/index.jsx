@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import {
-  Navbar,
+  Navbar as NextUINavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
@@ -12,7 +12,7 @@ import {
   Button,
 } from '@nextui-org/react';
 import { Github } from 'lucide-react';
-import UserAvatar from '../Avatar/Avatar';
+import UserAvatar from '../Avatar';
 import { useSelector } from 'react-redux';
 
 const AcmeLogo = () => (
@@ -32,7 +32,7 @@ const AcmeLogo = () => (
   </svg>
 );
 
-export default function HomeNavbar() {
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { loading } = useSelector((state) => state.auth);
   const user = localStorage.getItem('user')
@@ -42,7 +42,7 @@ export default function HomeNavbar() {
 
   return (
     <>
-      <Navbar
+      <NextUINavbar
         isBordered
         isBlurred={false}
         position="static"
@@ -149,7 +149,7 @@ export default function HomeNavbar() {
             </NavbarMenuItem>
           ))}
         </NavbarMenu>
-      </Navbar>
+      </NextUINavbar>
       <Outlet />
     </>
   );

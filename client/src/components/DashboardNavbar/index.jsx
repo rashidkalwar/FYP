@@ -18,7 +18,7 @@ import {
   Github,
 } from 'lucide-react';
 
-import UserAvatar from '../Avatar/Avatar';
+import UserAvatar from '../Avatar';
 
 const SidebarLinks = [
   {

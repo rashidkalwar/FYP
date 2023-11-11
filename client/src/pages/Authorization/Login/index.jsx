@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button, Divider, Card, Input, Checkbox } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
-import { userLogin } from '../../redux/user/userSlice';
-import GoogleOAuthButton from '../../components/GoogleOAuthButton';
+import { userLogin } from '../../../redux/user/userSlice';
+import GoogleOAuthButton from '../../../components/GoogleOAuthButton';
 
 function Login() {
   const [username, setUsername] = React.useState('');
@@ -49,7 +49,7 @@ function Login() {
   }, [navigate, redirect, error, message]);
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-[90vh]">
       <Card className="w-full max-w-md p-7 shadow-none">
         <div className="flex flex-col items-center">
           <p className="text-2xl font-bold mt-7 text-center">Welcome back</p>
