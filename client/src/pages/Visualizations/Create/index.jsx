@@ -42,7 +42,7 @@ function CreateVisualization() {
           </div>
         }
       >
-        <StepTwo />
+        <StepTwo setSelected={setSelected} />
       </Tab>
       <Tab
         key="step-3"
@@ -53,7 +53,7 @@ function CreateVisualization() {
           </div>
         }
       >
-        <StepThree />
+        <StepThree setSelected={setSelected} />
       </Tab>
     </Tabs>
   );
