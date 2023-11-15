@@ -59,6 +59,9 @@ function Form() {
   const [description, setDescription] = React.useState('');
   const [selectedDataset, setSelectedDataset] = React.useState(null);
   const [chartType, setChartType] = React.useState('');
+  const [plotColumns, setPlotColumns] = React.useState(null);
+  const [xAxisColumn, setXAxisColumn] = React.useState(null);
+  const [yAxisColumn, setYAxisColumn] = React.useState(null);
 
   const handleSubmit = () => {
     console.log({
@@ -66,8 +69,9 @@ function Form() {
       description: description,
       dataset: selectedDataset,
       chartType: chartType,
-      datasets: datasets,
-      datasetList: datasetList,
+      plotColumns: plotColumns,
+      xAxisColumns: xAxisColumn,
+      yAxisColumn: yAxisColumn,
     });
   };
 
@@ -151,6 +155,7 @@ function Form() {
           className="mx-auto"
           selectionMode="multiple"
           radius="full"
+          onChange={(e) => setPlotColumns(e.target.value)}
         >
           {columnsList.map((animal) => (
             <SelectItem key={animal.value} value={animal.value}>
@@ -167,6 +172,7 @@ function Form() {
           description="For auto, leave empty"
           className=" mx-auto"
           radius="full"
+          onChange={(e) => setXAxisColumn(e.target.value)}
         >
           {columnsList.map((animal) => (
             <SelectItem key={animal.value} value={animal.value}>
@@ -181,6 +187,7 @@ function Form() {
           description="For auto, leave empty"
           className="mx-auto"
           radius="full"
+          onChange={(e) => setYAxisColumn(e.target.value)}
         >
           {columnsList.map((animal) => (
             <SelectItem key={animal.value} value={animal.value}>
