@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { fetchDatasets, fetchDataset } from '../../redux/dataset/datasetSlice';
+import { addVisualization } from '../../redux/visualization/visualizationSlice';
 
 const chartTypes = [
   { label: 'Area Chart', value: 'area-chart' },
