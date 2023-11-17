@@ -6,30 +6,50 @@ exports.getOne = async (req, res) => {
 
 exports.create = async (req, res) => {
   const userId = req.user.userId;
-  const datasetId = req.body.datasetId;
-  const name = req.body.name;
-  const description = req.body.description;
+  const {
+    dataset,
+    title,
+    description,
+    chartType,
+    plotColumns,
+    xAxisColumn,
+    yAxisColumn,
+  } = req.body;
+  const uniqueId =
+    Date.now().toString(36) + Math.random().toString(36).substr(2);
 
   const visualization = new Visualization({
-    userId: userId,
-    datasetId: datasetId,
-    name: name,
+    uniqueId: uniqueId,
+    user: userId,
+    dataset: dataset,
+    title: title,
     description: description,
+    chartType: chartType,
+    plotColumns: plotColumns,
+    xAxisColumn: xAxisColumn,
+    yAxisColumn: yAxisColumn,
   });
 
   await visualization
     .save()
-    .then(() => {})
-    .catch((err) =>
+    .then((result) => {
+      console.log(result);
+      const payload = {
+        ...result._doc,
+        visualizationId: result._id,
+        message: 'Visualization created Successfully',
+      };
+      res.status(201).send(payload);
+    })
+    .catch((err) => {
+      console.log(err);
       res.status(500).send({
         ...err,
         error: {
           message: 'Error creating Visualization',
         },
-      })
-    );
-
-  return res.status(200).json({ message: 'Create method working' });
+      });
+    });
 };
 
 exports.update = async (req, res) => {

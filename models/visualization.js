@@ -2,20 +2,22 @@ const mongoose = require('mongoose');
 
 const visualizationSchema = new mongoose.Schema(
   {
+    uniqueId: String,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
     dataset: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Dataset',
+      type: String,
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: 'Dataset',
       required: true,
     },
-    name: String,
+    title: String,
     description: String,
     chartType: String,
-    selectedColumns: [
+    plotColumns: [
       {
         type: String,
       },

@@ -6,9 +6,8 @@ export const addVisualization = createAsyncThunk(
   'visualization/add_visualization',
   async ({ formData }, { rejectWithValue, dispatch }) => {
     try {
-      //   const response = await service.addVisualization(formData);
+      const response = await service.addVisualization(formData);
       //   dispatch(fetchDatasets());
-      console.log(formData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -49,3 +48,5 @@ const visualizationSlice = createSlice({
       });
   },
 });
+
+export default visualizationSlice.reducer;

@@ -64,16 +64,19 @@ function Form() {
   const [xAxisColumn, setXAxisColumn] = React.useState(null);
   const [yAxisColumn, setYAxisColumn] = React.useState(null);
 
-  const handleSubmit = () => {
-    console.log({
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
       title: title,
       description: description,
       dataset: selectedDataset,
       chartType: chartType,
       plotColumns: plotColumns,
-      xAxisColumns: xAxisColumn,
+      xAxisColumn: xAxisColumn,
       yAxisColumn: yAxisColumn,
-    });
+    };
+
+    dispatch(addVisualization({ formData }));
   };
 
   const handleConfetti = () => {
@@ -87,7 +90,10 @@ function Form() {
     });
   };
   return (
-    <div className="max-w-5xl py-10 px-20 rounded-2xl mx-20 shadow-2xl mt-5 space-y-5">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-5xl py-10 px-20 rounded-2xl mx-20 shadow-2xl mt-5 space-y-5"
+    >
       <h2 className="mb-8 text-center text-3xl font-bold text-blue-900/90">
         Create a Data Visualization
       </h2>
@@ -202,9 +208,10 @@ function Form() {
           disableRipple
           className="relative overflow-visible rounded-full hover:-translate-y-1 px-12 shadow-xl text-white bg-blue-900/90 after:content-[''] after:absolute after:rounded-full after:inset-0 after:bg-blue-900/40 after:z-[-1] after:transition after:!duration-500 hover:after:scale-150 hover:after:opacity-0"
           onPress={handleConfetti}
+          type="submit"
           onClick={() => {
             onOpen();
-            handleSubmit();
+            // handleSubmit();
           }}
           size="lg"
         >
@@ -268,7 +275,7 @@ function Form() {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </form>
   );
 }
 
