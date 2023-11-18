@@ -4,6 +4,18 @@ exports.getOne = async (req, res) => {
   return res.status(200).json({ message: 'Get method working' });
 };
 
+exports.getMany = async (req, res) => {
+  const userId = req.user.userId;
+  try {
+    const visualizations = await Visualization.find({ user: userId }).select(
+      'uniqueId title description chartType dataset createdAt updatedAt'
+    );
+    return res.status(200).json(visualizations);
+  } catch (err) {
+    return res.status(500).json({ error: { message: err.message } });
+  }
+};
+
 exports.create = async (req, res) => {
   const userId = req.user.userId;
   const {

@@ -1,13 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as service from './visualizationService';
 
+// Fetch all Visualizations for current user
+export const fetchVisualizations = createAsyncThunk(
+  'visualization/get_visualizations',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await service.getVisualizations();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Add a Visualization
 export const addVisualization = createAsyncThunk(
   'visualization/add_visualization',
   async ({ formData }, { rejectWithValue, dispatch }) => {
     try {
       const response = await service.addVisualization(formData);
-      //   dispatch(fetchDatasets());
+      dispatch(fetchVisualizations());
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -29,7 +42,22 @@ const visualizationSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Create a new visualization
+      // Fetch all the Visualizations this user has access to.
+      .addCase(fetchVisualizations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(fetchVisualizations.fulfilled, (state, action) => {
+        state.visualizations = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchVisualizations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+
+      // Create a new Visualization
       .addCase(addVisualization.pending, (state, action) => {
         state.loading = true;
         state.error = null;

@@ -5,8 +5,9 @@ const { verifyToken } = require('../middleware/verifyToken');
 
 const router = express.Router();
 
-router.get('/', visualizationController.getOne);
 router.post('/', verifyToken, visualizationController.create);
+router.get('/:id', visualizationController.getOne);
+router.get('/', verifyToken, visualizationController.getMany);
 router.put('/:id', verifyToken, visualizationController.update);
 router.delete('/:id', verifyToken, visualizationController.delete);
 
