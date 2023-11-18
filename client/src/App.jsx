@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Datasets from './pages/Datasets';
 import Visualizations from './pages/Visualizations';
 import Analytics from './pages/Analytics';
-import CreateVisualization from './pages/Visualizations/Create';
+import Form from './pages/Visualizations/Create';
 
 import HomeNavbar from './components/Navbar';
 import DashboardNavbar from './components/DashboardNavbar';
@@ -33,7 +33,7 @@ function App() {
           <Route path="datasets" element={<Datasets />} />
           <Route path="visualizations">
             <Route index element={<Visualizations />} />
-            <Route path="create" element={<CreateVisualization />} />
+            <Route path="create" element={<Form />} />
           </Route>
           <Route path="analytics" element={<Analytics />} />
           <Route path="*" element={<Page404 />} />

@@ -1,5 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import {
   Input,
   Select,
@@ -12,14 +14,11 @@ import {
   useDisclosure,
   Tooltip,
 } from '@nextui-org/react';
-import {
-  Link,
-  //  CheckCheck,
-  Copy,
-} from 'lucide-react';
+import { Link, CheckCheck, Copy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { fetchDatasets, fetchDataset } from '../../redux/dataset/datasetSlice';
 import { addVisualization } from '../../redux/visualization/visualizationSlice';
+import FallbackSpinner from '../../components/FallbackSpinner';
 
 const chartTypes = [
   { label: 'Area Chart', value: 'area-chart' },
@@ -28,13 +27,21 @@ const chartTypes = [
 ];
 
 function Form() {
+  const [Icon, setIcon] = React.useState(<Copy size={18} />);
+  const [tooltipText, setTooltipText] = React.useState('Copy');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { loading, datasets, dataset } = useSelector((state) => state.dataset);
+  const { datasets, dataset } = useSelector((state) => state.dataset);
+  const { loading, error, message } = useSelector(
+    (state) => state.visualization
+  );
 
   React.useEffect(() => {
     dispatch(fetchDatasets());
-  }, [dispatch]);
+    message && toast.success(message);
+    error && toast.error(error.message);
+  }, [dispatch, error, message]);
 
   let datasetList = [];
 
@@ -89,6 +96,16 @@ function Form() {
       spread: 90,
     });
   };
+
+  const handleClick = () => {
+    navigator.clipboard.writeText('This is Link text');
+    setIcon(<CheckCheck size={18} />);
+    setTooltipText('Copied');
+    setTimeout(() => {
+      setIcon(<Copy size={18} />);
+      setTooltipText('Copy');
+    }, 5000);
+  };
   return (
     <form
       onSubmit={handleSubmit}
@@ -106,7 +123,6 @@ function Form() {
           placeholder="Enter a title"
           radius="full"
           onChange={(e) => setTitle(e.target.value)}
-          isDisabled={loading}
         />
         <Input
           className="md:min-w-[250px]"
@@ -209,10 +225,7 @@ function Form() {
           className="relative overflow-visible rounded-full hover:-translate-y-1 px-12 shadow-xl text-white bg-blue-900/90 after:content-[''] after:absolute after:rounded-full after:inset-0 after:bg-blue-900/40 after:z-[-1] after:transition after:!duration-500 hover:after:scale-150 hover:after:opacity-0"
           onPress={handleConfetti}
           type="submit"
-          onClick={() => {
-            onOpen();
-            // handleSubmit();
-          }}
+          onClick={onOpen}
           size="lg"
         >
           Submit
@@ -223,11 +236,15 @@ function Form() {
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          //   navigate(-1);
+          navigate(-1);
         }}
       >
         <ModalContent className="min-h-[150px]">
-          {() => (
+          {loading ? (
+            <ModalBody className="min-h-[150px] flex justify-center items-center">
+              <FallbackSpinner />
+            </ModalBody>
+          ) : (
             <>
               <ModalHeader className="flex justify-center">
                 Share your visualization
@@ -251,21 +268,16 @@ function Form() {
                   }}
                   startContent={<Link className="text-gray-500" size={20} />}
                   endContent={
-                    <Tooltip
-                      showArrow={true}
-                      content="Copy"
-                      // content={tooltipText}
-                    >
+                    <Tooltip showArrow={true} content={tooltipText}>
                       <Button
                         className="bg-blue-900/90 hover:bg-blue-900/80"
                         color="primary"
                         radius="full"
                         size="lg"
                         isIconOnly
-                        // onClick={handleClick}
+                        onClick={handleClick}
                       >
-                        {/* {Icon} */}
-                        <Copy size={18} />
+                        {Icon}
                       </Button>
                     </Tooltip>
                   }
