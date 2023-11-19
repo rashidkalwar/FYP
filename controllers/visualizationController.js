@@ -64,12 +64,32 @@ exports.create = async (req, res) => {
     });
 };
 
+exports.delete = async (req, res) => {
+  const userId = req.user.userId;
+  const uniqueId = req.params.id;
+
+  existingVisualization = await Visualization.findOne({
+    user: userId,
+    uniqueId: uniqueId,
+  });
+
+  if (existingVisualization) {
+    try {
+      await Visualization.deleteOne({ user: userId, uniqueId: uniqueId });
+      return res
+        .status(200)
+        .json({ message: 'Visualization deleted successfully' });
+    } catch (err) {
+      return res.status(500).json({ error: { message: err.message } });
+    }
+  } else {
+    return res
+      .status(400)
+      .json({ error: { message: 'Visualization does not exist' } });
+  }
+};
+
 exports.update = async (req, res) => {
   const userId = req.user.userId;
   return res.status(200).json({ message: 'Update method working' });
-};
-
-exports.delete = async (req, res) => {
-  const userId = req.user.userId;
-  return res.status(200).json({ message: 'Delete method working' });
 };

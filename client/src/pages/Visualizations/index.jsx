@@ -52,7 +52,7 @@ function Visualizations() {
 
   React.useEffect(() => {
     dispatch(fetchVisualizations());
-  }, []);
+  }, [dispatch]);
 
   const [filterValue, setFilterValue] = React.useState('');
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -74,7 +74,7 @@ function Visualizations() {
     }
 
     return filteredVisualizations;
-  }, [visualizations, filterValue]);
+  }, [visualizations, filterValue, hasSearchFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -102,6 +102,8 @@ function Visualizations() {
     switch (columnKey) {
       case 'title':
         return <div className="font-medium">{cellValue}</div>;
+      case 'description':
+        return <div className="max-w-[200px]">{cellValue}</div>;
       case 'chartType': {
         switch (cellValue) {
           case 'area-chart':
@@ -134,8 +136,12 @@ function Visualizations() {
                 {cellValue.split('-').slice(0, 2).join(' ')}
               </Chip>
             );
+          default:
+            return <>{cellValue}</>;
         }
       }
+      case 'dataset':
+        return <>{cellValue.split('-').join(' ')}</>;
       case 'createdAt':
         return <>{cellValue.split('T')[0]}</>;
       case 'updatedAt':
@@ -221,11 +227,11 @@ function Visualizations() {
       </div>
     );
   }, [
+    onClear,
     filterValue,
     onRowsPerPageChange,
     visualizations.length,
     onSearchChange,
-    hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -264,7 +270,7 @@ function Visualizations() {
         </div>
       </div>
     );
-  }, [items.length, page, pages, hasSearchFilter]);
+  }, [page, pages, onNextPage, onPreviousPage]);
 
   // function reverseArr(input) {
   //   var ret = new Array();

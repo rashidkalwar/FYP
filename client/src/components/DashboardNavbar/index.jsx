@@ -143,6 +143,7 @@ function DashboardNavbar() {
             className="items-center justify-normal"
             justify="end"
           >
+            <span className="font-medium text-gray-500">v1.0</span>
             <Input
               classNames={{
                 base: 'max-w-full sm:max-w-[12rem] h-10',

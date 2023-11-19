@@ -28,6 +28,20 @@ export const addVisualization = createAsyncThunk(
   }
 );
 
+// Delete a Visualization
+export const deleteVisualization = createAsyncThunk(
+  'visualization/delete_visualization',
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await service.deleteVisualization(id);
+      dispatch(fetchVisualizations());
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   visualization: {},
   visualizations: [],
@@ -55,6 +69,24 @@ const visualizationSlice = createSlice({
       .addCase(fetchVisualizations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
+      })
+
+      // Delete a Visualization
+      .addCase(deleteVisualization.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(deleteVisualization.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(deleteVisualization.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload
+          ? action.payload.error
+          : { message: 'Network Error!' };
       })
 
       // Create a new Visualization
