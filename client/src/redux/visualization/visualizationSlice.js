@@ -14,6 +14,19 @@ export const fetchVisualizations = createAsyncThunk(
   }
 );
 
+// Fetch a Visualization
+export const fetchVisualization = createAsyncThunk(
+  'visualization/get_visualization',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await service.getVisualization(id);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Add a Visualization
 export const addVisualization = createAsyncThunk(
   'visualization/add_visualization',
@@ -71,6 +84,21 @@ const visualizationSlice = createSlice({
         state.error = action.payload.message;
       })
 
+      // Fetch a Visualization
+      .addCase(fetchVisualization.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(fetchVisualization.fulfilled, (state, action) => {
+        state.visualization = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchVisualization.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+
       // Delete a Visualization
       .addCase(deleteVisualization.pending, (state) => {
         state.loading = true;
@@ -98,6 +126,7 @@ const visualizationSlice = createSlice({
       .addCase(addVisualization.fulfilled, (state, action) => {
         state.loading = false;
         state.message = action.payload.message;
+        state.visualization = action.payload;
         state.error = null;
       })
       .addCase(addVisualization.rejected, (state, action) => {

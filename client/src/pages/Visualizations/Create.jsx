@@ -12,9 +12,8 @@ import {
   ModalBody,
   Button,
   useDisclosure,
-  Tooltip,
+  Snippet,
 } from '@nextui-org/react';
-import { Link, CheckCheck, Copy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { fetchDatasets, fetchDataset } from '../../redux/dataset/datasetSlice';
 import { addVisualization } from '../../redux/visualization/visualizationSlice';
@@ -27,13 +26,11 @@ const chartTypes = [
 ];
 
 function Form() {
-  const [Icon, setIcon] = React.useState(<Copy size={18} />);
-  const [tooltipText, setTooltipText] = React.useState('Copy');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { datasets, dataset } = useSelector((state) => state.dataset);
-  const { loading, error, message } = useSelector(
+  const { loading, error, message, visualization } = useSelector(
     (state) => state.visualization
   );
 
@@ -95,16 +92,6 @@ function Form() {
       particleCount: 130,
       spread: 90,
     });
-  };
-
-  const handleClick = () => {
-    navigator.clipboard.writeText('This is Link text');
-    setIcon(<CheckCheck size={18} />);
-    setTooltipText('Copied');
-    setTimeout(() => {
-      setIcon(<Copy size={18} />);
-      setTooltipText('Copy');
-    }, 5000);
   };
   return (
     <form
@@ -239,7 +226,7 @@ function Form() {
           navigate(-1);
         }}
       >
-        <ModalContent className="min-h-[150px]">
+        <ModalContent className="min-h-[150px] min-w-max">
           {loading ? (
             <ModalBody className="min-h-[150px] flex justify-center items-center">
               <FallbackSpinner />
@@ -254,34 +241,16 @@ function Form() {
                   Use the following link to share your visualization with
                   others!
                 </p>
-                <Input
-                  isReadOnly
-                  type="text"
-                  color="default"
-                  variant="faded"
+                <Snippet
+                  className="bg-blue-900/90 shadow-blue-900/40"
+                  hideSymbol
+                  variant="shadow"
                   size="lg"
-                  radius="full"
-                  defaultValue="http://localhost:3000/"
-                  className="max-w-sm"
-                  classNames={{
-                    inputWrapper: 'pr-0',
-                  }}
-                  startContent={<Link className="text-gray-500" size={20} />}
-                  endContent={
-                    <Tooltip showArrow={true} content={tooltipText}>
-                      <Button
-                        className="bg-blue-900/90 hover:bg-blue-900/80"
-                        color="primary"
-                        radius="full"
-                        size="lg"
-                        isIconOnly
-                        onClick={handleClick}
-                      >
-                        {Icon}
-                      </Button>
-                    </Tooltip>
-                  }
-                />
+                  color="primary"
+                  tooltipProps={{ color: 'default' }}
+                >
+                  {`http://localhost:3000/charts/${visualization.uniqueId}`}
+                </Snippet>
               </ModalBody>
             </>
           )}

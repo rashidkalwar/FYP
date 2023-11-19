@@ -1,7 +1,17 @@
 const Visualization = require('../models/visualization');
 
 exports.getOne = async (req, res) => {
-  return res.status(200).json({ message: 'Get method working' });
+  const userId = req.user.userId;
+  const uniqueId = req.params.id;
+  try {
+    const visualization = await Visualization.findOne({
+      user: userId,
+      uniqueId: uniqueId,
+    });
+    return res.status(200).json(visualization);
+  } catch (err) {
+    return res.status(500).json({ error: { message: err.message } });
+  }
 };
 
 exports.getMany = async (req, res) => {
@@ -45,7 +55,6 @@ exports.create = async (req, res) => {
   await visualization
     .save()
     .then((result) => {
-      console.log(result);
       const payload = {
         ...result._doc,
         visualizationId: result._id,
@@ -54,7 +63,6 @@ exports.create = async (req, res) => {
       res.status(201).send(payload);
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).send({
         ...err,
         error: {
