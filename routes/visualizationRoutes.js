@@ -5,6 +5,7 @@ const { verifyToken } = require('../middleware/verifyToken');
 
 const router = express.Router();
 
+// For Authenticated Users
 router.post('/', verifyToken, visualizationController.create);
 router.get('/:id', verifyToken, visualizationController.getOne);
 router.get('/', verifyToken, visualizationController.getMany);

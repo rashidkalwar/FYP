@@ -8,6 +8,7 @@ const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const datasetRoutes = require('./routes/datasetRoutes');
 const visualizationRoutes = require('./routes/visualizationRoutes');
+const chartRoutes = require('./routes/chartRoutes');
 const connectDB = require('./config/db');
 const config = require('./config/keys');
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public/assets')));
 app.use('/api/user', userRoutes);
 app.use('/api/dataset', datasetRoutes);
 app.use('/api/visualization', visualizationRoutes);
+app.use('/api/charts', chartRoutes);
 
 // mongoose database setup
 connectDB();
