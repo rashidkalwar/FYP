@@ -9,6 +9,7 @@ import Datasets from './pages/Datasets';
 import Visualizations from './pages/Visualizations';
 import Analytics from './pages/Analytics';
 import Form from './pages/Visualizations/Create';
+import Chart from './pages/Charts';
 
 import HomeNavbar from './components/Navbar';
 import DashboardNavbar from './components/DashboardNavbar';
@@ -25,6 +26,8 @@ function App() {
         <Route path="/" element={<HomeNavbar />}>
           <Route index element={<Home />} />
           <Route path="*" element={<AuthRoutes />} />
+          <Route path="charts/:id" element={<Chart />} />
+          <Route path="404" element={<Page404 />} />
         </Route>
 
         {/* Protected routes */}

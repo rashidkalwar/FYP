@@ -1,11 +1,11 @@
 const Visualization = require('../models/visualization');
 
 exports.getOne = async (req, res) => {
-  const userId = req.user.userId;
+  // const userId = req.user.userId;
   const uniqueId = req.params.id;
   try {
     const visualization = await Visualization.findOne({
-      user: userId,
+      // user: userId,
       uniqueId: uniqueId,
     });
     return res.status(200).json(visualization);
@@ -100,15 +100,6 @@ exports.delete = async (req, res) => {
 exports.update = async (req, res) => {
   const userId = req.user.userId;
   return res.status(200).json({ message: 'Update method working' });
-};
-
-exports.getAllUniqueIds = async (req, res) => {
-  try {
-    const uniqueIds = await Visualization.find().select('uniqueId');
-    return res.status(200).json(uniqueIds);
-  } catch (err) {
-    return res.status(500).json({ error: { message: err.message } });
-  }
 };
 
 exports.getEach = async (req, res) => {

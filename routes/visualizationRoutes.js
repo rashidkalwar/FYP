@@ -7,7 +7,7 @@ const router = express.Router();
 
 // For Authenticated Users
 router.post('/', verifyToken, visualizationController.create);
-router.get('/:id', verifyToken, visualizationController.getOne);
+router.get('/:id', visualizationController.getOne);
 router.get('/', verifyToken, visualizationController.getMany);
 router.put('/:id', verifyToken, visualizationController.update);
 router.delete('/:id', verifyToken, visualizationController.delete);

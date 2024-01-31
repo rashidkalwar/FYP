@@ -15,30 +15,13 @@ import { Github } from 'lucide-react';
 import UserAvatar from '../Avatar';
 import { useSelector } from 'react-redux';
 
-const AcmeLogo = () => (
-  <svg
-    className="text-blue-600"
-    fill="none"
-    height="36"
-    viewBox="0 0 32 32"
-    width="36"
-  >
-    <path
-      clipRule="evenodd"
-      d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-      fill="currentColor"
-      fillRule="evenodd"
-    />
-  </svg>
-);
-
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { loading } = useSelector((state) => state.auth);
   const user = localStorage.getItem('user')
     ? JSON.parse(localStorage.getItem('user'))
     : null;
-  const menuItems = ['About', 'Vision', 'Product', 'Features'];
+  const menuItems = ['About', 'Vision', 'Product'];
 
   return (
     <>
@@ -48,6 +31,7 @@ export default function Navbar() {
         position="static"
         isMenuOpen={isMenuOpen}
         onMenuOpenChange={setIsMenuOpen}
+        maxWidth="xl"
       >
         {/* Mobile Menu */}
         <NavbarContent className="sm:hidden" justify="start">
@@ -60,8 +44,7 @@ export default function Navbar() {
           {/* Logo */}
           <NavbarBrand>
             <Link className="flex items-center" to="/">
-              <AcmeLogo />
-              <p className="font-bold text-lg text-inherit">GraphIT</p>
+              <img className="h-40" alt="" src="/default.svg" />
             </Link>
           </NavbarBrand>
         </NavbarContent>
@@ -70,31 +53,25 @@ export default function Navbar() {
         <NavbarContent className="sm:hidden pr-3" justify="center">
           <NavbarBrand>
             <Link className="flex items-center" to="/">
-              <AcmeLogo />
-              <p className="font-bold text-inherit">GraphIT</p>
+              <img className="h-40" alt="" src="/default.svg" />
             </Link>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-5" justify="center">
           <NavbarItem>
-            <NextUILink color="foreground" href="#">
+            <NextUILink color="foreground" href="/#1">
               About
             </NextUILink>
           </NavbarItem>
           <NavbarItem>
-            <NextUILink color="foreground" href="#">
+            <NextUILink color="foreground" href="/#2">
               Vision
             </NextUILink>
           </NavbarItem>
           <NavbarItem>
-            <NextUILink color="foreground" href="#">
+            <NextUILink color="foreground" href="/#3">
               Product
-            </NextUILink>
-          </NavbarItem>
-          <NavbarItem>
-            <NextUILink color="foreground" href="#">
-              Features
             </NextUILink>
           </NavbarItem>
         </NavbarContent>

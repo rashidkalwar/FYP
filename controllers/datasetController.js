@@ -117,10 +117,13 @@ exports.upload = async (req, res) => {
 
 // get a dataset
 exports.getOne = async (req, res) => {
-  const userId = req.user.userId;
+  // const userId = req.user.userId;
   const slug = req.params.slug;
   try {
-    const dataset = await Dataset.findOne({ user: userId, slug: slug });
+    const dataset = await Dataset.findOne({
+      //  user: userId,
+      slug: slug,
+    });
     return res.status(200).json(dataset);
   } catch (err) {
     return res.status(500).json({ error: { message: err.message } });
