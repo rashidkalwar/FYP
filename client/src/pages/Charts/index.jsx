@@ -45,7 +45,7 @@ function Chart() {
 
   return (
     <div className="flex flex-col items-center justify-center mx-auto min-h-[730px] md:w-full max-w-sm md:max-w-3xl">
-      <div className="relative w-[370px] h-[300px] md:w-[500px] md:h-[400px]">
+      <div className="relative w-[390px] h-[300px] md:w-[550px] md:h-[400px]">
         <Chart
           data={datasetLoaded && dataset.data}
           title={chart && chart.title}

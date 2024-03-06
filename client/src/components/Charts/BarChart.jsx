@@ -45,7 +45,7 @@ function BarChart(props) {
         </text>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={props.XAxisColumn} />
-        <YAxis dataKey={props.YAxisColumn} />
+        <YAxis width={100} dataKey={props.YAxisColumn} />
         <Tooltip />
         <Legend />
         {plotColumns.map((column) => {
